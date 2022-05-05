@@ -146,6 +146,11 @@ pub fn list_afinet_netifas() -> Result<Vec<(String, IpAddr)>, Error> {
         while !(**ifa).ifa_next.is_null() {
             let ifa_addr = (**ifa).ifa_addr;
 
+            if ifa_addr.is_null() {
+                *ifa = (**ifa).ifa_next;
+                continue;
+            }
+
             match (*ifa_addr).sa_family as i32 {
                 // AF_INET IPv4 protocol implementation
                 AF_INET => {
